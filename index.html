@@ -1,0 +1,34 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="css/default.css">
+    <title>Google Weather</title>
+</head>
+<body>
+    <h1> GOOGLE MAPS INC</h1>
+    <h1>WEATHER API INC</h1>
+    
+    <div id="map">
+
+    </div>
+   
+    <script>
+         function initMap(){
+            console.log("HELLO");
+            //AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo
+
+
+            let location = {lat: 41.385064, lng: 2.173403 };
+            let map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 4,
+                center: location
+            });
+        }
+    </script>
+    <script type="text/javascript" src="js/script.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo&callback=initMap"
+    async defer></script>
+</body>
+</html>
