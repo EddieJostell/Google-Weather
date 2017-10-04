@@ -95,7 +95,7 @@
           for (var i = 0; i < myObj.length; i++) {
               var element = myObj[i];
              //console.log(myObj[i].latlng);
-              createMarkers(myObj[i].latlng[0],myObj[i].latlng[1], map);
+              createMarkers(myObj[i].latlng[0],myObj[i].latlng[1], map, myObj[i].name);
           }     
          }
       };
@@ -128,7 +128,7 @@
    
 } 
 var markers = [];
-function createMarkers(lat, long, map) {
+function createMarkers(lat, long, map, name) {
    
 
    
@@ -139,7 +139,7 @@ function createMarkers(lat, long, map) {
            // position: {lat:mark[i][0], lng:mark[i][1]},
            position: {lat:lat, lng: long},
             map: map,
-            
+            html: name
         });
         
     //}
