@@ -14,21 +14,35 @@
 
     </div>
    
-    <script>
+<!--   <script>
          function initMap(){
-            console.log("HELLO");
-            //AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo
-
-
-            let location = {lat: 41.385064, lng: 2.173403 };
-            let map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 4,
-                center: location
+            let myLatLng = {lat: 52.520007, lng: 13.404954};
+            /* let location = {lat: 52.520007, lng: 13.404954}; */
+               let map = new google.maps.Map(document.getElementById("map"), {
+              /*   styles: [{
+                    "featureType": "administrative.locality",
+                    "elementType": "labels",
+                    "stylers": [{
+                      "visibility": "on"
+                    }]
+                  }], */
+                zoom: 5,
+                center: myLatLng
+            });
+        
+        
+            let marker = new google.maps.Marker({
+                postion : myLatLng,
+                map: map,
+                title: 'MY MARKER!'
             });
         }
-    </script>
+    </script>  -->
+     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo&callback=initMap"
+   async defer ></script>
+   <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo&callback=googleModule.initMap"
+   defer ></script> -->
+    <script type="text/javascript" src="countries.json"></script>
     <script type="text/javascript" src="js/script.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo&callback=initMap"
-    async defer></script>
 </body>
 </html>
