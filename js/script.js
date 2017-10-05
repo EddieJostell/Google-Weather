@@ -1,148 +1,137 @@
 
-/*
- const googleModule = (() => {
-
-    let map;
-
-    return {
-
-        
-            initMap: () =>{
-                console.log("HELLO");
-                //AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo
-
-
-                let location = {lat: 48.856614, lng: 2.352222};
-                   let map = new google.maps.Map(document.getElementById("map"), {
-                    zoom: 4,
-                    center: location
-                });
-            },
-
-             onReadyCallback: () => {
-                console.log("function working?");
-                if (document.querySelector('#map').length > 0) {
-                    if (document.querySelector('html').lang) 
-                        lang = document,querySelector('html').lang;
-                    
-                    else 
-                        lang = 'en';
-
-                        var js_file = document.createElement('script');
-                        js_file.type = 'text/javascript';
-                        js_file.src = 
-                        'https://maps.googleapis.com/maps/api/js?key=AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo&callback=googleModule.initMap&language=' + lang;
-                        document.getElementsByTagName('head')[0].appendChil(js_file); 
-                }
-            }, 
-
-      
-        //Self-invoking function that will load the DOM content, first page, loading indicator, show if there are any saved articles in the DB and activate all the EventListeners.
-		initialize: (() => {
-			document.addEventListener('DOMContentLoaded', function() {
-                    googleModule.onReadyCallback();
-			});
-		})()
-    }
-})(); */
-
-
-/* document.addEventListener('DOMContentLoaded', function () {
-    if (document.querySelectorAll('#map').length > 0)
-    {
-      if (document.querySelector('html').lang)
-        lang = document.querySelector('html').lang;
-      else
-        lang = 'en';
-  
-      var js_file = document.createElement('script');
-      js_file.type = 'text/javascript';
-      js_file.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo&callback=initMap&language=' + lang;
-      document.getElementsByTagName('head')[0].appendChild(js_file);
-    }
-  }); */
-
-  
-
- function initMap(){
-
-    var country = [];
-    var zone = [];
-
+function initMap(){
+    
+    
     //AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo
-  
+    
     
     let location = {lat: 52.520007, lng: 13.404954};
-      var map = new google.maps.Map(document.getElementById('map'), {
+    var map = new google.maps.Map(document.getElementById('map'), {
         styles: [{
             "featureType": "administrative.locality",
             "elementType": "labels",
             "stylers": [{
-              "visibility": "on"
+                "visibility": "on"
             }]
-          }],
+        }],
         zoom: 4,
         center: location
-      });
+    });
+
     
-      //createMarkers(map);
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) { 
+            var myObj = JSON.parse(this.responseText);
+            //console.log("Json parsed data is: " + JSON.stringify(myObj)); 
+            for (var key in myObj) {
+                if (myObj.hasOwnProperty(key)) {
+                    var element = myObj[key];
+                    //console.log(element.CapitalName);
+                    createMarkers(
+                    parseFloat(element.CapitalLatitude),
+                    parseFloat(element.CapitalLongitude), 
+                    map,  
+                    element.CapitalName);
 
-      var xmlhttp = new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) { 
-          var myObj = JSON.parse(this.responseText);
-          //console.log("Json parsed data is: " + JSON.stringify(myObj));
-          for (var i = 0; i < myObj.length; i++) {
-              var element = myObj[i];
-             //console.log(myObj[i].latlng);
-              createMarkers(myObj[i].latlng[0],myObj[i].latlng[1], map, myObj[i].name);
-          }     
-         }
-      };
-    xmlhttp.open("GET", "countries.json", true);
+                }
+            }
+        }
+    };
+    xmlhttp.open("GET", "country-capitals.json", true);
     xmlhttp.send();
-
-
-    //createMarkers(, map);
-    //console.log(zone);
+    
+    
     /* var myLatLng = {lat: 48.856614, lng: 2.352222};
     var marker = new google.maps.Marker({
         position: myLatLng,
         map: map,
         title: 'Paris'
-      }); */
-
- /*      var mark = [ [48.856614, 2.352222]]
-      
-         
-          for (var i = 0; i <mark.length; i++) {
-              console.log("HEJ ", mark[i][0], mark[i][1]);
-              new google.maps.Marker({
-                 // position: {lat:mark[i][0], lng:mark[i][1]},
-                 position: {lat:48.856614, lng:2.352222},
-                  map: map
-              
-              });
-              
-          } */
-   
+    }); */    
 } 
-var markers = [];
-function createMarkers(lat, long, map, name) {
-   
 
-   
-    /* for (var i = 0; i <markerz.length; i++) { */
-
-        console.log("HEJ ", lat, long);
-        new google.maps.Marker({
-           // position: {lat:mark[i][0], lng:mark[i][1]},
-           position: {lat:lat, lng: long},
+function createMarkers(lat, long, map, capital) {
+        let marker = new google.maps.Marker({ 
+            position: {lat:lat, lng: long},
             map: map,
-            html: name
         });
         
-    //}
-}
+        createInfoWindow(capital, marker, map, lat, long);        
+        //}
+    }
+    
+    function createInfoWindow(capital, marker, map, lat, long, winfo) {
+        //console.log("YOLO", winfo);
 
-//http://www.lab.lmnixon.org/4th/worldcapitals.html
+       /*  let weatherInfo = `<div class="">
+        <div class="card-block">
+        <h6 class="card-title">Temp:  Degrees Celcius</h6>
+        <p class="card-text">Pressure</p>				
+        <p class="card-text">Humidity</p>
+        <p class="card-text">Clouds in the Sky:  </p>
+        <p class="card-text">Name: </p>
+        </div>
+        </div>`; */
+      
+    
+        let infowindow = new google.maps.InfoWindow({
+            content: winfo
+        });
+
+        
+        marker.addListener('click', function() {
+            //console.log("YOLO", lat, long)
+           getCurrentWeatherFromAPI(lat, long);
+           
+            infowindow.open(map, marker);
+        });
+    }
+    
+    
+    function getCurrentWeatherFromAPI(lat, long) {
+        
+        //006595c752436e02740e9d8ff6b6cd05
+        let weather = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=metric&APPID=006595c752436e02740e9d8ff6b6cd05`;
+        fetch(weather) 
+        .then((response) => {
+            //console.log(response.json());
+            let currentWeather = response.json();
+            //console.log(currentWeather);
+                return currentWeather;    
+        })
+        .then(function(currentWeather) {
+            //console.log(currentWeather);
+            createWeatherLiteral(currentWeather);
+            //console.log(currentWeather.main.temp);
+        })
+        .catch(function(error) {
+            console.log('Request failed', error); 
+        });		
+    }
+   
+      function createWeatherLiteral(info) {
+        let weatherInfo = `<div class="">
+        <div class="card-block">
+        <h6 class="card-title">Temp: ${info.main.temp} Degrees Celcius</h6>
+        <p class="card-text">Pressure ${info.main.pressure}}</p>				
+        <p class="card-text">Humidity ${info.main.humidity}</p>
+        <p class="card-text">Clouds in the Sky: ${info.clouds.all} </p>
+        <p class="card-text">Name: ${info.name} </p>
+        </div>
+        </div>`;
+        //console.log(weatherInfo);
+        createInfoWindow(weatherInfo);
+        BOOM(weatherInfo);
+    } 
+
+    function BOOM(w) {
+        console.log(w);
+    }
+
+    /* function get5dayForecastFromAPI() {
+
+    } */
+
+
+    
+    //http://www.lab.lmnixon.org/4th/worldcapitals.html

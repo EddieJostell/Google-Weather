@@ -1,0 +1,62 @@
+/*
+ const googleModule = (() => {
+
+    let map;
+
+    return {
+
+        
+            initMap: () =>{
+                console.log("HELLO");
+                //AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo
+
+
+                let location = {lat: 48.856614, lng: 2.352222};
+                   let map = new google.maps.Map(document.getElementById("map"), {
+                    zoom: 4,
+                    center: location
+                });
+            },
+
+             onReadyCallback: () => {
+                console.log("function working?");
+                if (document.querySelector('#map').length > 0) {
+                    if (document.querySelector('html').lang) 
+                        lang = document,querySelector('html').lang;
+                    
+                    else 
+                        lang = 'en';
+
+                        var js_file = document.createElement('script');
+                        js_file.type = 'text/javascript';
+                        js_file.src = 
+                        'https://maps.googleapis.com/maps/api/js?key=AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo&callback=googleModule.initMap&language=' + lang;
+                        document.getElementsByTagName('head')[0].appendChil(js_file); 
+                }
+            }, 
+
+      
+        //Self-invoking function that will load the DOM content, first page, loading indicator, show if there are any saved articles in the DB and activate all the EventListeners.
+		initialize: (() => {
+			document.addEventListener('DOMContentLoaded', function() {
+                    googleModule.onReadyCallback();
+			});
+		})()
+    }
+})(); */
+
+
+/* document.addEventListener('DOMContentLoaded', function () {
+    if (document.querySelectorAll('#map').length > 0)
+    {
+      if (document.querySelector('html').lang)
+        lang = document.querySelector('html').lang;
+      else
+        lang = 'en';
+  
+      var js_file = document.createElement('script');
+      js_file.type = 'text/javascript';
+      js_file.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo&callback=initMap&language=' + lang;
+      document.getElementsByTagName('head')[0].appendChild(js_file);
+    }
+  }); */
