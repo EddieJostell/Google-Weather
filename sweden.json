@@ -1,0 +1,8 @@
+{"coord":{"lon":18.07,"lat":59.33},
+"weather":[{"id":803,"main":"Clouds","description":"broken clouds","icon":"04d"}],
+"base":"stations",
+"main":{"temp":11,"pressure":1000,"humidity":62,"temp_min":11,"temp_max":11},
+"visibility":10000,"wind":{"speed":4.6,"deg":320},
+"clouds":{"all":75},"dt":1507296000,
+"sys":{"type":1,"id":5420,"message":0.0474,"country":"SE","sunrise":1507266348,"sunset":1507305855},
+"id":2673730,"name":"Stockholm","cod":200}
