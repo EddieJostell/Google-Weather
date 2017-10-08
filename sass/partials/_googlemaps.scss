@@ -1,5 +1,17 @@
 #map {
-    height: 500px;
+    height: 100vh;
     width: 100%;
-    border: 2px solid black;
 }
+
+.map-icon-label {
+    position: absolute;
+}
+
+.map-icon-label .map-icon {
+	font-size: 24px;
+	color: #949FA0;
+	line-height: 48px;
+	text-align: center;
+	white-space: nowrap;
+}
+
