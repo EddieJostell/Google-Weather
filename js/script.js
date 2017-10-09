@@ -173,6 +173,7 @@ function initMap(){
         zoom: 5,
         center: location
     });
+
     fetch("country-capitals.json") 
     .then((response) => {
         return response.json();
@@ -222,8 +223,8 @@ function createInfoWindow(capital, marker, map, weatherInfo) {
     }
     
     marker.addListener('click', function() {
-        console.log(marker.position.lat(), marker.position.lng());
-        getCurrentWeatherFromAPI(marker.position.lat(), marker.position.lng(), infowindow);   
+        getCurrentWeatherFromAPI(marker.position.lat(), marker.position.lng(), infowindow);
+        get5dayForecastFromAPI(marker.position.lat(), marker.position.lng());   
         closeAllInfoWindows();        
         infowindow.open(map, marker);
     });
@@ -237,6 +238,7 @@ function getCurrentWeatherFromAPI(lat, long, infowindow) {
     })
     .then(function(currentWeather) {
         createWeatherLiteral(currentWeather, infowindow);
+        weatherLiteralForSite(currentWeather);
     })
     .catch(function(error) {
         console.log('Request failed', error); 
@@ -246,16 +248,77 @@ function getCurrentWeatherFromAPI(lat, long, infowindow) {
 function createWeatherLiteral(info, infowindow) {
     let weatherInfo = 
     `<div class="window">
-       <a href="#link1"> <h5 class="para">City: ${info.name} </h5> </a>
-        <h5 class="title">Temperature: ${info.main.temp} °C</h5>
-        <h5 class="para">Wind: ${info.wind.speed} m/s / ${info.wind.deg} degrees</h5>
-        <h5 class="para">Lowest temperature: ${info.main.temp_min} °C</h5>
-        <h5 class="para">Highest temperature: ${info.main.temp_max} °C</h5>					
-        <h5 class="para">Humidity ${info.main.humidity}%</h5>
-        <h5 class="para"><i class="owf owf-${info.weather[0].id}"></i>${info.weather[0].description} in the sky </h5>
+       <a href="#" class="divBtn" id="button" onclick="showFrontLayer();"> <h4 class="para">${info.name} </h4> </a>
+        <h4 class="title">Temperature: ${info.main.temp} °C</h4>
+        <h4 class="para">Wind: ${info.wind.speed} m/s / ${info.wind.deg} degrees</h4>
+        <h4 class="para">Lowest temperature: ${info.main.temp_min} °C</h4>
+        <h4 class="para">Highest temperature: ${info.main.temp_max} °C</h4>					
+        <h4 class="para">Humidity ${info.main.humidity}%</h4>
+        <h4 class="para"><i class="owf owf-${info.weather[0].id}"></i>${info.weather[0].description} in the sky </h4>
     </div>`;
-
+    
     infowindow.setContent(weatherInfo); 
-} 
+}
+
+function weatherLiteralForSite(current) {
+    weatherDiv.innerHTML = "";
+    let weatherInfo = 
+    `<div class="">
+        <h3 class="">${current.name} </h3>
+        <h4 class=""><img class="img" src="../img/thermo.png" alt="Temperature:"/>${current.main.temp} °C</h4>
+        <h4 class=""><img class="img" src="../img/wind-lines.png" alt="Wind:"/> ${current.wind.speed} m/s / ${current.wind.deg} degrees</h4>				
+        <h4 class="">Humidity ${current.main.humidity}%</h4>
+        <h4 class="">Weather:<i class="owf owf-${current.weather[0].id}"></i> ${current.weather[0].description}</h4>
+    </div>`;
+        weatherDiv.innerHTML += weatherInfo;
+}
+
+function get5dayForecastFromAPI(lat, long) {
+    let forecast = `forecast-sthlm.json`; //`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${long}&units=metric&APPID=006595c752436e02740e9d8ff6b6cd05` | eb3bc19f92d9df047f452e1230df445c
+    fetch(forecast) 
+    .then((response) => {
+        return response.json();
+    })
+    .then(function(forecast) {
+        forecastLiteral(forecast);
+    })
+    .catch(function(error) {
+        console.log('Request failed', error); 
+    });		
+}
+
+function forecastLiteral(forecast) {
+  var total = '';
+    console.log("function recieve data?", forecast);
+     for (var i = 0; i < forecast.list.length; i+=8) {
+        var element = forecast.list[i];
+       // console.log(element);
+        forecastDiv.innerHTML = "";
+        let forecastInfo = 
+        `<div class="siteDiv">
+            <p class="">Forecast for: ${element.dt_txt}</p>
+            <p class="">Temperature: ${element.main.temp.toFixed(0)} °C</p>
+            <p class="">Humidity: ${element.main.humidity} %</p>
+            <p class="">Wind ${element.wind.speed} m/s with ${element.wind.deg} degrees</p>
+            <p class="">${element.weather[0].description}</p><h1><i class="owf owf-${element.weather[0].id}"></i></h1>
+            
+        </div>`;
+            total = total + forecastInfo;
+           // console.log(forecastInfo);
+    } 
+    forecastDiv.innerHTML = total; 
+
+    //console.log(total);
+}
+
+function showFrontLayer() {
+    document.getElementById('capital').style.visibility='visible';
+  }
+
+function hideFrontLayer() {
+    document.getElementById('capital').style.visibility='hidden';
+  }
+
+
 
 google.maps.event.addDomListener(window, 'load', initMap);

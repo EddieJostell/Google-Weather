@@ -60,3 +60,14 @@
       document.getElementsByTagName('head')[0].appendChild(js_file);
     }
   }); */
+
+
+    /* forecastDiv.innerHTML = "";
+    let forecastInfo = 
+    `<div class="siteDiv">
+        <h4 class="">Forecast for: ${forecast.list[2].dt_txt}</h4>
+        <h4 class=""> ${forecast.list[2].weather[0].description}</h4> <h1><i class="owf owf-${forecast.list[2].weather[0].id}"></i></h1>
+        
+    </div>`;
+        forecastDiv.innerHTML += forecastInfo; */
+        //console.log(forecastInfo);
