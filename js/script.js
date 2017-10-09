@@ -250,11 +250,9 @@ function createWeatherLiteral(info, infowindow) {
     `<div class="window">
        <a href="#" class="divBtn" id="button" onclick="showFrontLayer();"> <h4 class="para">${info.name} </h4> </a>
         <h4 class="title">Temperature: ${info.main.temp} °C</h4>
-        <h4 class="para">Wind: ${info.wind.speed} m/s / ${info.wind.deg} degrees</h4>
-        <h4 class="para">Lowest temperature: ${info.main.temp_min} °C</h4>
-        <h4 class="para">Highest temperature: ${info.main.temp_max} °C</h4>					
+        <h4 class="para">Wind: ${info.wind.speed} m/s / ${info.wind.deg} degrees</h4>				
         <h4 class="para">Humidity ${info.main.humidity}%</h4>
-        <h4 class="para"><i class="owf owf-${info.weather[0].id}"></i>${info.weather[0].description} in the sky </h4>
+        <h4 class="para">${info.weather[0].main} <i class="owf owf-${info.weather[0].id}"></i></h4>
     </div>`;
     
     infowindow.setContent(weatherInfo); 
@@ -267,8 +265,8 @@ function weatherLiteralForSite(current) {
         <h3 class="">${current.name} </h3>
         <h4 class=""><img class="img" src="../img/thermo.png" alt="Temperature:"/>${current.main.temp} °C</h4>
         <h4 class=""><img class="img" src="../img/wind-lines.png" alt="Wind:"/> ${current.wind.speed} m/s / ${current.wind.deg} degrees</h4>				
-        <h4 class="">Humidity ${current.main.humidity}%</h4>
-        <h4 class="">Weather:<i class="owf owf-${current.weather[0].id}"></i> ${current.weather[0].description}</h4>
+        <h4 class=""><img class="img" src="../img/humidity.png" alt="Humidity:"/> ${current.main.humidity}%</h4>
+        <h4 class="">Weather:<i class="owf owf-${current.weather[0].id}"></i> ${current.weather[0].main}</h4>
     </div>`;
         weatherDiv.innerHTML += weatherInfo;
 }
@@ -288,27 +286,29 @@ function get5dayForecastFromAPI(lat, long) {
 }
 
 function forecastLiteral(forecast) {
-  var total = '';
+    
+    var total = '';
     console.log("function recieve data?", forecast);
      for (var i = 0; i < forecast.list.length; i+=8) {
         var element = forecast.list[i];
-       // console.log(element);
+   
+        var days = {'Mon': 'Monday','Tue': 'Tuesday','Wed': 'Wednsday','Thu': 'Thursday','Fri': 'Friday'};
+         var date = new Date().toString().split(' ')[0]; //get day abreviation first
+         console.log(days[date]);
+
         forecastDiv.innerHTML = "";
         let forecastInfo = 
         `<div class="siteDiv">
             <p class="">Forecast for: ${element.dt_txt}</p>
-            <p class="">Temperature: ${element.main.temp.toFixed(0)} °C</p>
-            <p class="">Humidity: ${element.main.humidity} %</p>
-            <p class="">Wind ${element.wind.speed} m/s with ${element.wind.deg} degrees</p>
-            <p class="">${element.weather[0].description}</p><h1><i class="owf owf-${element.weather[0].id}"></i></h1>
-            
+            <h4 class="">${element.weather[0].main}<i class="owf owf-${element.weather[0].id}"></i></h4>
+            <p class=""><img class="img" src="../img/thermo.png" alt="Temperature" /> ${element.main.temp.toFixed(0)} °C</p>
+            <p class=""><img class="img" src="../img/humidity.png" alt="Humidity:"/> ${element.main.humidity} %</p>
+            <p class=""><img class="img" src="../img/wind-lines.png" alt="Wind:" /> ${element.wind.speed.toFixed(0)} m/s with ${element.wind.deg.toFixed(0)} degrees</p> 
         </div>`;
             total = total + forecastInfo;
-           // console.log(forecastInfo);
     } 
     forecastDiv.innerHTML = total; 
 
-    //console.log(total);
 }
 
 function showFrontLayer() {

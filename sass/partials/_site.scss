@@ -40,6 +40,10 @@
         flex-direction: row;
         justify-content: flex-start;
 
+        .img {
+            width: 24px;
+            height: 24px;
+        }
         .siteDiv {
             border: 1px solid red;
         }
