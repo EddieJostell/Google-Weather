@@ -183,12 +183,12 @@ function initMap(){
         for (var key in response) {
             if (response.hasOwnProperty(key)) {
                 var element = response[key];
-               
+            //console.log(element.CountryName);
                var marker = createMarkers(
                     parseFloat(element.CapitalLatitude),
                     parseFloat(element.CapitalLongitude), 
                     map,  
-                    element.CapitalName);
+                    element.CapitalName, element.CountryName);
                     allMyMarkers.push(marker);
             }
         }
@@ -199,10 +199,11 @@ function initMap(){
     });		
 } 
     
-function createMarkers(lat, long, map, capital) {
+function createMarkers(lat, long, map, capital, country) {
     let marker = new Marker({ 
         position: {lat:lat, lng: long},
         id: capital,
+        country: country,
         map: map,
         title: capital,
         icon: {
@@ -230,7 +231,7 @@ function createInfoWindow(capital, marker, map, weatherInfo) {
     
     marker.addListener('click', function() {
         getCurrentWeatherFromAPI(marker.position.lat(), marker.position.lng(), infowindow);
-        get5dayForecastFromAPI(marker.position.lat(), marker.position.lng(), infowindow);   
+        get5dayForecastFromAPI(marker.position.lat(), marker.position.lng(), infowindow);  
         closeAllInfoWindows();        
         infowindow.open(map, marker);
     });
@@ -245,6 +246,7 @@ function getCurrentWeatherFromAPI(lat, long, infowindow) {
     .then(function(currentWeather) {
         createWeatherLiteral(currentWeather, infowindow);
         weatherLiteralForSite(currentWeather);
+       
     })
     .catch(function(error) {
         console.log('Request failed', error); 
@@ -252,7 +254,6 @@ function getCurrentWeatherFromAPI(lat, long, infowindow) {
 }
 
 function createWeatherLiteral(info, infowindow) {
-    console.log("createWeaterLiteral function", infowindow)
     let weatherInfo = 
     `<div class="window">
        <a href="#" class="divBtn" id="button" onclick="showFrontLayer();"> <h4 class="para">${info.name} </h4> </a>
@@ -276,6 +277,7 @@ function weatherLiteralForSite(current) {
         <h4 class="">Weather:<i class="owf owf-${current.weather[0].id}"></i> ${current.weather[0].main}</h4>
     </div>`;
         weatherDiv.innerHTML += weatherInfo;
+        return current;
 }
 
 function get5dayForecastFromAPI(lat, long) {
@@ -286,6 +288,7 @@ function get5dayForecastFromAPI(lat, long) {
     })
     .then(function(forecast) {
         forecastLiteral(forecast);
+        
     })
     .catch(function(error) {
         console.log('Request failed', error); 
@@ -293,7 +296,6 @@ function get5dayForecastFromAPI(lat, long) {
 }
 
 function forecastLiteral(forecast) {
-    
     var total = '';
     //console.log("function recieve data?", forecast);
      for (var i = 0; i < forecast.list.length; i+=8) {
@@ -315,17 +317,24 @@ function forecastLiteral(forecast) {
             total = total + forecastInfo;
     } 
     forecastDiv.innerHTML = total; 
-
 }
 
-function popDropDownList(allMarkers, map) {    
+
+function popDropDownList(allMarkers, map) {  
     var select = document.getElementById("selectCity");
-   
     for(var i = 0; i < allMarkers.length; i++) {
         var el = document.createElement("option");
-        el.textContent = allMarkers[i].title;
+        el.textContent = allMarkers[i].title + " " + " - " + allMyMarkers[i].country;
         el.value = allMarkers[i].id;
         select.appendChild(el);   
+
+        var options = $("#selectCity option");                    // Collect options         
+        options.detach().sort(function(a,b) {               // Detach from select, then Sort
+            var at = $(a).text();
+            var bt = $(b).text();         
+            return (at > bt)?1:((at < bt)?-1:0);            // Tell the sort function how to order
+        });
+        options.appendTo("#selectCity");                          // Re-attach to select
     }   
         
     document.getElementById("selectCity").onchange=function() {
@@ -336,16 +345,32 @@ function popDropDownList(allMarkers, map) {
                 currentMarker = allMarkers[i];
             }
         }
-        console.log(currentMarker);
+        /* console.log(currentMarker);
+        $(".gm-style-iw").find("#button").trigger('click'); */
+
+        new google.maps.event.trigger(currentMarker, 'click');
         map.setCenter({lat: currentMarker.position.lat(), lng: currentMarker.position.lng()});
-        map.setZoom(11);
+        map.setZoom(8);
+        
     }
     
 }
 
 function showFrontLayer() {
-    document.getElementById('capital').style.visibility='visible'; 
-    $('.site').show();      
+    console.log("AM I UPDATED?");
+    //document.getElementById('capital').style.visibility='visible'; 
+    $(".divBtn").click(function () {
+        $(".site").show();
+    });
+    
+   /*  $(document).click(function (e) {
+        if (!$(e.target).hasClass("divBtn") 
+            && $(e.target).parents(".site").length === 0) 
+        {
+            $(".site").hide();
+        }
+    }); */
+   
 }
 
 function hideFrontLayer() {
@@ -353,6 +378,12 @@ function hideFrontLayer() {
    
 }
 
+/* $(document).click(function(event) {
+    if ( !$(event.target).hasClass('site')) {
+         $(".site").hide();
+    }
+});
+ */
 
 
 google.maps.event.addDomListener(window, 'load', initMap);
