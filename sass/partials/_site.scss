@@ -4,7 +4,7 @@
     position: absolute;
     background-color: #f2f2f2;
     border: 5px solid blue;
-    width: 1200px;
+    width: 30%;
     height: auto;
     z-index: 1;
     visibility: hidden;
@@ -12,16 +12,16 @@
     margin: 0px 140px 175px 0px;
     padding : 30px;
   
-    
+
     .flexit {
         width: 100%;
         display: flex;
         flex-direction: column;
-        border: 1px solid salmon;
+       // border: 1px solid salmon;
     }
 
     .siteDiv {
-        border: 1px solid salmon;
+        //border: 1px solid salmon;
     }
 
     #weatherDiv {
@@ -38,14 +38,14 @@
         width: 100%;
         display: flex;
         flex-direction: row;
-        justify-content: flex-start;
+        justify-content: space-around;
 
         .img {
             width: 24px;
             height: 24px;
         }
         .siteDiv {
-            border: 1px solid red;
+            //border: 1px solid red;
         }
     }
 

@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="css/map-icons.min.css">
     <link rel="stylesheet" type="text/css" href="css/default.css">
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCt7sLtWFV6-iUi00e1gbz43NnlrGn6jOo"></script>
+    <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
     <script src="js/map-icons.min.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
     <title>Google Weather</title>
@@ -27,7 +31,11 @@
             </div>
             
         </div>
-        
+        <div id="dropDown">
+                <select id="selectCity">
+                        <option>Choose a City</option>
+                    </select>
+        </div>
         <div class="btnDiv">
             <a class="backBtn" onclick="hideFrontLayer();"><h5>Back to map</h5></a>
         </div>

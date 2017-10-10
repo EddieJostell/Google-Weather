@@ -1,4 +1,5 @@
 var InfoWindows = [];
+var allMyMarkers = [];
 
 function initMap(){
     let location = {lat: 52.520007, lng: 13.404954};		
@@ -182,13 +183,16 @@ function initMap(){
         for (var key in response) {
             if (response.hasOwnProperty(key)) {
                 var element = response[key];
-                createMarkers(
+               
+               var marker = createMarkers(
                     parseFloat(element.CapitalLatitude),
                     parseFloat(element.CapitalLongitude), 
                     map,  
                     element.CapitalName);
+                    allMyMarkers.push(marker);
             }
         }
+        popDropDownList(allMyMarkers, map);
     })
     .catch(function(error) {
         console.log('Request failed', error); 
@@ -198,7 +202,9 @@ function initMap(){
 function createMarkers(lat, long, map, capital) {
     let marker = new Marker({ 
         position: {lat:lat, lng: long},
+        id: capital,
         map: map,
+        title: capital,
         icon: {
             path: SQUARE_PIN,
             fillColor: '#f2f2f2',
@@ -208,8 +214,8 @@ function createMarkers(lat, long, map, capital) {
         },
         map_icon_label: '<span class="map-icon map-icon-postal-code"></span>'
     });
- 
     createInfoWindow(capital, marker, map);  
+    return marker;
 }
 
 function createInfoWindow(capital, marker, map, weatherInfo) {
@@ -224,14 +230,14 @@ function createInfoWindow(capital, marker, map, weatherInfo) {
     
     marker.addListener('click', function() {
         getCurrentWeatherFromAPI(marker.position.lat(), marker.position.lng(), infowindow);
-        get5dayForecastFromAPI(marker.position.lat(), marker.position.lng());   
+        get5dayForecastFromAPI(marker.position.lat(), marker.position.lng(), infowindow);   
         closeAllInfoWindows();        
         infowindow.open(map, marker);
     });
 }
 
 function getCurrentWeatherFromAPI(lat, long, infowindow) {
-    let weather = `sweden.json`; //https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=metric&APPID=006595c752436e02740e9d8ff6b6cd05 | eb3bc19f92d9df047f452e1230df445c
+    let weather = `sweden.json`; //`sweden.json` https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=metric&APPID=006595c752436e02740e9d8ff6b6cd05 | eb3bc19f92d9df047f452e1230df445c
     fetch(weather) 
     .then((response) => {
         return response.json();
@@ -246,6 +252,7 @@ function getCurrentWeatherFromAPI(lat, long, infowindow) {
 }
 
 function createWeatherLiteral(info, infowindow) {
+    console.log("createWeaterLiteral function", infowindow)
     let weatherInfo = 
     `<div class="window">
        <a href="#" class="divBtn" id="button" onclick="showFrontLayer();"> <h4 class="para">${info.name} </h4> </a>
@@ -272,7 +279,7 @@ function weatherLiteralForSite(current) {
 }
 
 function get5dayForecastFromAPI(lat, long) {
-    let forecast = `forecast-sthlm.json`; //`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${long}&units=metric&APPID=006595c752436e02740e9d8ff6b6cd05` | eb3bc19f92d9df047f452e1230df445c
+    let forecast = `forecast-sthlm.json`; //`forecast-sthlm.json` `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${long}&units=metric&APPID=006595c752436e02740e9d8ff6b6cd05` | eb3bc19f92d9df047f452e1230df445c
     fetch(forecast) 
     .then((response) => {
         return response.json();
@@ -288,22 +295,22 @@ function get5dayForecastFromAPI(lat, long) {
 function forecastLiteral(forecast) {
     
     var total = '';
-    console.log("function recieve data?", forecast);
+    //console.log("function recieve data?", forecast);
      for (var i = 0; i < forecast.list.length; i+=8) {
         var element = forecast.list[i];
-   
-        var days = {'Mon': 'Monday','Tue': 'Tuesday','Wed': 'Wednsday','Thu': 'Thursday','Fri': 'Friday'};
-         var date = new Date().toString().split(' ')[0]; //get day abreviation first
-         console.log(days[date]);
+
+         var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+         var d = new Date(element.dt_txt);
+         var dayName = days[d.getDay()]; 
 
         forecastDiv.innerHTML = "";
         let forecastInfo = 
         `<div class="siteDiv">
-            <p class="">Forecast for: ${element.dt_txt}</p>
-            <h4 class="">${element.weather[0].main}<i class="owf owf-${element.weather[0].id}"></i></h4>
+            <p class="">${dayName} at 12:00</p>
+            <h4 class=""><i class="owf owf-${element.weather[0].id}"></i> ${element.weather[0].description}</h4>
             <p class=""><img class="img" src="../img/thermo.png" alt="Temperature" /> ${element.main.temp.toFixed(0)} °C</p>
             <p class=""><img class="img" src="../img/humidity.png" alt="Humidity:"/> ${element.main.humidity} %</p>
-            <p class=""><img class="img" src="../img/wind-lines.png" alt="Wind:" /> ${element.wind.speed.toFixed(0)} m/s with ${element.wind.deg.toFixed(0)} degrees</p> 
+            <p class=""><img class="img" src="../img/wind-lines.png" alt="Wind:" /> ${element.wind.speed.toFixed(0)} m/s bearing ${element.wind.deg.toFixed(0)} degrees</p> 
         </div>`;
             total = total + forecastInfo;
     } 
@@ -311,14 +318,49 @@ function forecastLiteral(forecast) {
 
 }
 
+function popDropDownList(allMarkers, map) {    
+    var select = document.getElementById("selectCity");
+   
+    for(var i = 0; i < allMarkers.length; i++) {
+        var el = document.createElement("option");
+        el.textContent = allMarkers[i].title;
+        el.value = allMarkers[i].id;
+        select.appendChild(el);   
+    }   
+        
+    document.getElementById("selectCity").onchange=function() {
+        var val = this.value;
+        var currentMarker = null;
+        for(var i = 0; i < allMarkers.length; i++) {
+            if(val === allMarkers[i].id) {
+                currentMarker = allMarkers[i];
+            }
+        }
+        console.log(currentMarker);
+        map.setCenter({lat: currentMarker.position.lat(), lng: currentMarker.position.lng()});
+        map.setZoom(11);
+    }
+    
+}
+
 function showFrontLayer() {
-    document.getElementById('capital').style.visibility='visible';
-  }
+    document.getElementById('capital').style.visibility='visible'; 
+    $('.site').show();      
+}
 
 function hideFrontLayer() {
     document.getElementById('capital').style.visibility='hidden';
-  }
+   
+}
 
 
 
 google.maps.event.addDomListener(window, 'load', initMap);
+
+/* $('#selectCity').on('change', function() {
+    if ( this.value === currentMarker.id)
+    //.....................^.......
+    {
+      $(".site").hide();
+    }
+  }); */
