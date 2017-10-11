@@ -277,10 +277,8 @@ function weatherLiteralForSite(current) {
         <div class="wLeft">
             <h1 class="">${current.name} </h1>
             <h2>${dayName}</h2>
-            <h1 class=""><img class="img" src="../img/thermo-light.png" alt="Temperature:"/>${current.main.temp} °C</h1>
-        
+            <h1 class=""><img class="img" src="../img/thermo-light.png" alt="Temperature:"/>${current.main.temp} °C</h1> 
         </div>
-        
         <div class="wRight">
             <h2 class=""><i class="owf owf-${current.weather[0].id}"></i> ${current.weather[0].main}</h2>
             <h2 class=""><img class="img" src="../img/humidity-light.png" alt="Humidity:"/> ${current.main.humidity}%</h2>
