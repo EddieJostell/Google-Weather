@@ -1,134 +1,118 @@
 .site {
-    top: 0;
-    left: 0;
+    top: 80px;
+    left: 80px;
     position: absolute;
-    /* background-color: #2b2b2b; */
-    background: rgb(43, 43, 43); 
-    background: rgba(43, 43, 43, .5); 
-    border: 2px solid white;
-    border-radius: 10px;
-    width: 47%;
+    background: rgba(0, 0, 0, 0.3); 
+    border: 1px solid white;
+    border-radius: 6px;
+    width: 1000px;
     height: auto;
     z-index: 1;
     display: none;
-    margin: 80px 140px 175px 70px;;
+    padding: 20px;
     color: white;
-   
+
+    @media screen and (max-width:960px) {
+        top: 65px;
+        left: 25px;
+
+    }
+
+    @media screen and (max-width:855px) {
+      width: calc(100% - 50px);
+        
+    }
+    
     .flexme {
         width: 100%;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        
+        
+        #dropDown {
+            //margin: 5px 0 5px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-family: 'Roboto';
+            
+            #selectCity {
+                background: rgb(43, 43, 43); 
+                background: rgba(43, 43, 43, .5); 
+                border-radius: 6px;
+                width: 150px;
+                color: white; 
+                
+                option {
+                    font-family: 'Roboto';
+                    background-color: #2b2b2b;
+                }
+            }
+        }
+        
+        .btnDiv {
+            //border: 1px solid white;
+            width: 80px;
+            border-radius: 5px;
+            color: white;
+            margin-top: 4px;
+            margin-right: 4px;
+            
+            .backBtn {
+                font-size: 20px;
+                float: right;
+                
+                cursor: pointer;
+            }
+        }
     }
-
-
-
-    .flexit {
+    
+    #weatherDiv {
         width: 100%;
+        padding: 20px 0;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        margin-bottom: 10px;
-       // border: 1px solid green;
-    }
-
-    #weatherDiv {
-        width: 100%;
-        height: 200px;
-        margin: 5px 0 0 5px;
-        //border: 1px solid green;
-        font-weight: 200;
-
+        
         .wDiv {
             width: 100%;
-            height: 200px;
-            //border: 1px solid red;
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            //align-items: center;
-
-            .wLeft {
-                padding-top: 20px;
-                padding-left: 30px;
-                width: 50%;
-                //border: 1px solid white;
-            }
-
-            .wRight {
-                //border: 1px solid yellow;
-                display: flex;
-                flex-direction: column;
-                justify-self: flex-end;
-                align-self: flex-end;
-                padding-bottom: 20px;
-                margin: 0 150px 0 0;
-            }
+            align-items: center;
         }
         .img {
             width: 24px;
             height: 24px;
         }
     }
-
-    .btnDiv {
-        //border: 1px solid white;
-        width: 80px;
-        border-radius: 5px;
-        color: white;
-        margin-top: 4px;
-        margin-right: 4px;
-
-        .backBtn {
-            font-size: 20px;
-            float: right;
-            
-            cursor: pointer;
-        }
-    }
-
+    
+    
     #forecastDiv {
-        width: auto;
-        height: auto;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        //border: 1px solid red;
-        margin: 0 10px 10px 10px;
+        flex-wrap: wrap;
+        
+       /*  @media screen and (max-width:750px) {
+            
+            //flex-direction: column;
+            
+        } */
 
         .siteDiv {
-            margin-right: 2px;
+            padding: 10px;
         }
-
+        
+        
         .img {
             max-width: 100%;
-            width: 24px;
-            height: 24px;
+            width: 18px;
+            height: 18px;
         }
-
-    }
-
-    #dropDown {
-        margin: 5px 0 5px 30px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        font-family: 'Roboto';
-
-        #selectCity {
-            background: rgb(43, 43, 43); 
-            background: rgba(43, 43, 43, .5); 
-            border-radius: 10px;
-            width: 150px;
-            color: white; 
-
-            option {
-                font-family: 'Roboto';
-                background-color: #2b2b2b;
-            }
-        }
-    }
-
+        
+    }   
 }
 
 

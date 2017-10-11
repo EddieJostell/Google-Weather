@@ -266,27 +266,20 @@ function createWeatherLiteral(info, infowindow) {
 }
 
 function weatherLiteralForSite(current) {
-    var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
-    var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    var d = new Date(utc);
-    var dayName = days[d.getDay()];
-   
-    weatherDiv.innerHTML = "";
     let weatherInfo = 
     `<div class="wDiv">
-        <div class="wLeft">
+        <div>
             <h1 class="">${current.name} </h1>
-            <h2>${dayName}</h2>
+            <h2>${new Date().getDayFromDate()}</h2>
             <h1 class=""><img class="img" src="../img/thermo-light.png" alt="Temperature:"/>${current.main.temp} °C</h1> 
         </div>
-        <div class="wRight">
+        <div>
             <h2 class=""><i class="owf owf-${current.weather[0].id}"></i> ${current.weather[0].main}</h2>
             <h2 class=""><img class="img" src="../img/humidity-light.png" alt="Humidity:"/> ${current.main.humidity}%</h2>
             <h2 class=""><img class="img" src="../img/wind-lines-light.png" alt="Wind:"/> ${current.wind.speed} m/s | ${current.wind.deg} degrees</h2>				   
         </div>
     </div>`;
-        weatherDiv.innerHTML += weatherInfo;
-        return current;
+        weatherDiv.innerHTML = weatherInfo;
 }
 
 function get5dayForecastFromAPI(lat, long) {
@@ -305,21 +298,16 @@ function get5dayForecastFromAPI(lat, long) {
 
 function forecastLiteral(forecast) {
     var total = '';
-    //console.log("function recieve data?", forecast);
-     for (var i = 0; i < forecast.list.length; i+=8) {
+    for (var i = 0; i < forecast.list.length; i+=8) {
         var element = forecast.list[i];
-
-         var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-         var d = new Date(element.dt_txt);
-         var dayName = days[d.getDay()]; 
 
         forecastDiv.innerHTML = "";
         let forecastInfo = 
         `<div class="siteDiv">
-            <h3 class="">${dayName}: 12:00 </h3>
-            <h4 class=""><i class="owf owf-${element.weather[0].id}"></i> ${element.weather[0].description}</h4>
+            <h4 class="">${element.dt_txt.getDay()}: 12:00 </h4>
+            <h4 class=""><i class="owf owf-${element.weather[0].id}"></i> ${element.weather[0].description.capitalize()}</h4>
             <h4 class=""><img class="img" src="../img/thermo-light.png" alt="Temperature" /> ${element.main.temp.toFixed(0)} °C</h4>
-            <h3 class=""><img class="img" src="../img/humidity-light.png" alt="Humidity:"/> ${element.main.humidity} %</h3>
+            <h4 class=""><img class="img" src="../img/humidity-light.png" alt="Humidity:"/> ${element.main.humidity} %</h4>
             <h4 class=""><img class="img" src="../img/wind-lines-light.png" alt="Wind:" /> ${element.wind.speed.toFixed(0)} m/s | ${element.wind.deg.toFixed(0)} degrees</h4> 
         </div>`;
             total = total + forecastInfo;
