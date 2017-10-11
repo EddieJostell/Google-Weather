@@ -2,39 +2,103 @@
     top: 0;
     left: 0;
     position: absolute;
-    background-color: red;
-    border: 5px solid blue;
-    width: 30%;
+    /* background-color: #2b2b2b; */
+    background: rgb(43, 43, 43); 
+    background: rgba(43, 43, 43, .5); 
+    border: 2px solid white;
+    border-radius: 10px;
+    width: 47%;
     height: auto;
     z-index: 1;
-    visibility: hidden;
-    //text-align: center;
-    margin: 200px 140px 175px 0px;
-    padding : 30px;
-  
+    display: none;
+    margin: 80px 140px 175px 70px;;
+    color: white;
+   
+    .flexme {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+
 
     .flexit {
         width: 100%;
         display: flex;
-        flex-direction: column;
-       // border: 1px solid salmon;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 10px;
+       // border: 1px solid green;
     }
 
     #weatherDiv {
-        width: 50%;
-        border: 1px solid green;
+        width: 100%;
+        height: 200px;
+        margin: 5px 0 0 5px;
+        //border: 1px solid green;
+        font-weight: 200;
 
+        .wDiv {
+            width: 100%;
+            height: 200px;
+            //border: 1px solid red;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            //align-items: center;
+
+            .wLeft {
+                padding-top: 20px;
+                padding-left: 30px;
+                width: 50%;
+                //border: 1px solid white;
+            }
+
+            .wRight {
+                //border: 1px solid yellow;
+                display: flex;
+                flex-direction: column;
+                justify-self: flex-end;
+                align-self: flex-end;
+                padding-bottom: 20px;
+                margin: 0 100px 0 0;
+            }
+        }
         .img {
             width: 24px;
             height: 24px;
+        }
+    }
+
+    .btnDiv {
+        //border: 1px solid white;
+        width: 80px;
+        border-radius: 5px;
+        color: white;
+        margin-top: 4px;
+        margin-right: 4px;
+
+        .backBtn {
+            font-size: 20px;
+            float: right;
+            
+            cursor: pointer;
         }
     }
 
     #forecastDiv {
-        width: 100%;
+        width: auto;
+        height: auto;
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: space-between;
+        //border: 1px solid red;
+        margin: 0 10px 10px 10px;
+
+        .siteDiv {
+            margin-right: 2px;
+        }
 
         .img {
             width: 24px;
@@ -43,14 +107,26 @@
 
     }
 
-    .btnDiv {
-        border: 1px solid red;
+    #dropDown {
+        margin: 5px 0 5px 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-family: 'Roboto';
 
-        .backBtn {
-            cursor: pointer;
+        #selectCity {
+            background: rgb(43, 43, 43); 
+            background: rgba(43, 43, 43, .5); 
+            border-radius: 10px;
+            width: 150px;
+            color: white; 
+
+            option {
+                font-family: 'Roboto';
+                background-color: #2b2b2b;
+            }
         }
     }
-    
 
 }
 

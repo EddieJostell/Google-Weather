@@ -245,8 +245,7 @@ function getCurrentWeatherFromAPI(lat, long, infowindow) {
     })
     .then(function(currentWeather) {
         createWeatherLiteral(currentWeather, infowindow);
-        weatherLiteralForSite(currentWeather);
-       
+        weatherLiteralForSite(currentWeather);    
     })
     .catch(function(error) {
         console.log('Request failed', error); 
@@ -256,9 +255,9 @@ function getCurrentWeatherFromAPI(lat, long, infowindow) {
 function createWeatherLiteral(info, infowindow) {
     let weatherInfo = 
     `<div class="window">
-       <a href="#" class="divBtn" id="button" onclick="showFrontLayer();"> <h4 class="para">${info.name} </h4> </a>
+        <a href="#" class="divBtn" id="button" onclick="showHidePopup();"> <h4 class="para">${info.name}<- more!</h4></a>
         <h4 class="title">Temperature: ${info.main.temp} °C</h4>
-        <h4 class="para">Wind: ${info.wind.speed} m/s / ${info.wind.deg} degrees</h4>				
+        <h4 class="para">Wind: ${info.wind.speed} m/s | ${info.wind.deg} degrees</h4>				
         <h4 class="para">Humidity ${info.main.humidity}%</h4>
         <h4 class="para">${info.weather[0].main} <i class="owf owf-${info.weather[0].id}"></i></h4>
     </div>`;
@@ -267,14 +266,26 @@ function createWeatherLiteral(info, infowindow) {
 }
 
 function weatherLiteralForSite(current) {
+    var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+    var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var d = new Date(utc);
+    var dayName = days[d.getDay()];
+   
     weatherDiv.innerHTML = "";
     let weatherInfo = 
-    `<div class="">
-        <h3 class="">${current.name} </h3>
-        <h4 class=""><img class="img" src="../img/thermo.png" alt="Temperature:"/>${current.main.temp} °C</h4>
-        <h4 class=""><img class="img" src="../img/wind-lines.png" alt="Wind:"/> ${current.wind.speed} m/s / ${current.wind.deg} degrees</h4>				
-        <h4 class=""><img class="img" src="../img/humidity.png" alt="Humidity:"/> ${current.main.humidity}%</h4>
-        <h4 class="">Weather:<i class="owf owf-${current.weather[0].id}"></i> ${current.weather[0].main}</h4>
+    `<div class="wDiv">
+        <div class="wLeft">
+            <h1 class="">${current.name} </h1>
+            <h2>${dayName}</h2>
+            <h1 class=""><img class="img" src="../img/thermo-light.png" alt="Temperature:"/>${current.main.temp} °C</h1>
+        
+        </div>
+        
+        <div class="wRight">
+            <h2 class=""><i class="owf owf-${current.weather[0].id}"></i> ${current.weather[0].main}</h2>
+            <h2 class=""><img class="img" src="../img/humidity-light.png" alt="Humidity:"/> ${current.main.humidity}%</h2>
+            <h2 class=""><img class="img" src="../img/wind-lines-light.png" alt="Wind:"/> ${current.wind.speed} m/s | ${current.wind.deg} degrees</h2>				   
+        </div>
     </div>`;
         weatherDiv.innerHTML += weatherInfo;
         return current;
@@ -288,7 +299,6 @@ function get5dayForecastFromAPI(lat, long) {
     })
     .then(function(forecast) {
         forecastLiteral(forecast);
-        
     })
     .catch(function(error) {
         console.log('Request failed', error); 
@@ -308,17 +318,16 @@ function forecastLiteral(forecast) {
         forecastDiv.innerHTML = "";
         let forecastInfo = 
         `<div class="siteDiv">
-            <p class="">${dayName} at 12:00</p>
+            <h3 class="">${dayName}: 12:00 </h3>
             <h4 class=""><i class="owf owf-${element.weather[0].id}"></i> ${element.weather[0].description}</h4>
-            <p class=""><img class="img" src="../img/thermo.png" alt="Temperature" /> ${element.main.temp.toFixed(0)} °C</p>
-            <p class=""><img class="img" src="../img/humidity.png" alt="Humidity:"/> ${element.main.humidity} %</p>
-            <p class=""><img class="img" src="../img/wind-lines.png" alt="Wind:" /> ${element.wind.speed.toFixed(0)} m/s bearing ${element.wind.deg.toFixed(0)} degrees</p> 
+            <h4 class=""><img class="img" src="../img/thermo-light.png" alt="Temperature" /> ${element.main.temp.toFixed(0)} °C</h4>
+            <h3 class=""><img class="img" src="../img/humidity-light.png" alt="Humidity:"/> ${element.main.humidity} %</h3>
+            <h4 class=""><img class="img" src="../img/wind-lines-light.png" alt="Wind:" /> ${element.wind.speed.toFixed(0)} m/s | ${element.wind.deg.toFixed(0)} degrees</h4> 
         </div>`;
             total = total + forecastInfo;
     } 
     forecastDiv.innerHTML = total; 
 }
-
 
 function popDropDownList(allMarkers, map) {  
     var select = document.getElementById("selectCity");
@@ -328,13 +337,12 @@ function popDropDownList(allMarkers, map) {
         el.value = allMarkers[i].id;
         select.appendChild(el);   
 
-        var options = $("#selectCity option");                    // Collect options         
-        options.detach().sort(function(a,b) {               // Detach from select, then Sort
-            var at = $(a).text();
-            var bt = $(b).text();         
-            return (at > bt)?1:((at < bt)?-1:0);            // Tell the sort function how to order
-        });
-        options.appendTo("#selectCity");                          // Re-attach to select
+        var sel = $('#selectCity');
+        var selected = sel.val(); // cache selected value, before reordering
+        var opts_list = sel.find('option');
+        opts_list.sort(function(a, b) { return $(a).text() > $(b).text() ? 1 : -1; });
+        sel.html('').append(opts_list);
+        sel.val(selected);                      
     }   
         
     document.getElementById("selectCity").onchange=function() {
@@ -350,48 +358,27 @@ function popDropDownList(allMarkers, map) {
 
         new google.maps.event.trigger(currentMarker, 'click');
         map.setCenter({lat: currentMarker.position.lat(), lng: currentMarker.position.lng()});
-        map.setZoom(8);
-        
+        map.setZoom(7);
     }
     
 }
 
-function showFrontLayer() {
-    console.log("AM I UPDATED?");
-    //document.getElementById('capital').style.visibility='visible'; 
-    $(".divBtn").click(function () {
-        $(".site").show();
+function showHidePopup() {
+   
+        $(".site").fadeIn(300, function(){
+            $(this).focus();});
+     
+    $('.backBtn').click(function() {
+     $("#capital").fadeOut(300);
     });
-    
-   /*  $(document).click(function (e) {
-        if (!$(e.target).hasClass("divBtn") 
-            && $(e.target).parents(".site").length === 0) 
-        {
-            $(".site").hide();
+
+    $(document).mouseup(function(e) {
+        var container = $(".window");
+        var site = $('.site');
+
+        if (!container.is(e.target) && container.has(e.target).length === 0 && !site.is(e.target) && site.has(e.target).length === 0 ) {  // if the target of the click isn't the container nor a descendant of the container
+            $('.site').fadeOut(300);
         }
-    }); */
-   
+    });
 }
-
-function hideFrontLayer() {
-    document.getElementById('capital').style.visibility='hidden';
-   
-}
-
-/* $(document).click(function(event) {
-    if ( !$(event.target).hasClass('site')) {
-         $(".site").hide();
-    }
-});
- */
-
-
 google.maps.event.addDomListener(window, 'load', initMap);
-
-/* $('#selectCity').on('change', function() {
-    if ( this.value === currentMarker.id)
-    //.....................^.......
-    {
-      $(".site").hide();
-    }
-  }); */
