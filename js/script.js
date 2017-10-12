@@ -215,6 +215,10 @@ function createMarkers(lat, long, map, capital, country) {
         },
         map_icon_label: '<span class="map-icon map-icon-postal-code"></span>'
     });
+
+    /* var markerCluster = new MarkerClusterer(map, marker,
+        {imagePath: '../img/m3.png'}); */
+
     createInfoWindow(capital, marker, map);  
     return marker;
 }
