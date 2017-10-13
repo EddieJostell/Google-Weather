@@ -174,7 +174,7 @@ function initMap(){
         zoom: 5,
         center: location
     });
-
+    
     fetch("country-capitals.json") 
     .then((response) => {
         return response.json();
@@ -183,20 +183,21 @@ function initMap(){
         for (var key in response) {
             if (response.hasOwnProperty(key)) {
                 var element = response[key];
-            //console.log(element.CountryName);
-               var marker = createMarkers(
+                var marker = createMarkers(
                     parseFloat(element.CapitalLatitude),
                     parseFloat(element.CapitalLongitude), 
                     map,  
                     element.CapitalName, element.CountryName);
                     allMyMarkers.push(marker);
+                }
             }
-        }
-        popDropDownList(allMyMarkers, map);
-    })
-    .catch(function(error) {
-        console.log('Request failed', error); 
-    });		
+            createMarkerCluster(map, allMyMarkers);
+            popDropDownList(allMyMarkers, map);
+        })
+        .catch(function(error) {
+            console.log('Request failed', error); 
+        });
+        
 } 
     
 function createMarkers(lat, long, map, capital, country) {
@@ -215,21 +216,23 @@ function createMarkers(lat, long, map, capital, country) {
         },
         map_icon_label: '<span class="map-icon map-icon-postal-code"></span>'
     });
-
-
-    var markerCluster = new MarkerClusterer(map,
-        {imagePath: '../img/cluster'});
-
-        markerCluster.addMarkers(allMyMarkers, true);
-
     createInfoWindow(capital, marker, map);  
     return marker;
 }
+    
+function createMarkerCluster(map, allMyMarkers) {
 
+    var markerCluster = new MarkerClusterer(
+        map, 
+        allMyMarkers,
+        {imagePath: '../img/cluster/m'}
+    );
+}
+        
 function createInfoWindow(capital, marker, map, weatherInfo) {
     let infowindow = new google.maps.InfoWindow();
     InfoWindows.push(infowindow);
-
+    
     function closeAllInfoWindows() {
         for (var i = 0; i < InfoWindows.length; i++) {
             InfoWindows[i].close();     
@@ -259,11 +262,11 @@ function getCurrentWeatherFromAPI(lat, long, infowindow) {
     });		
 }
 
-function createWeatherLiteral(info, infowindow) {
+function createWeatherLiteral(info, infowindow, map) {
     let weatherInfo = 
     `<div class="window">
-        <a href="#" class="divBtn" id="button" onclick="showHidePopup();"> <h4 class="para">${info.name}<- more!</h4></a>
-        <h4 class="title">Temperature: ${info.main.temp} °C</h4>
+        <a href="#" class="divBtn" id="button" onclick="showHidePopup();"> <h4 class="para">${info.name} <- more!</h4></a>
+        <h4 class="title">Temperature: ${info.main.temp.toFixed(0)} °C</h4>
         <h4 class="para">Wind: ${info.wind.speed} m/s | ${info.wind.deg} degrees</h4>				
         <h4 class="para">Humidity ${info.main.humidity}%</h4>
         <h4 class="para">${info.weather[0].main} <i class="owf owf-${info.weather[0].id}"></i></h4>
@@ -278,15 +281,15 @@ function weatherLiteralForSite(current) {
         <div>
             <h1 class="">${current.name} </h1>
             <h2>${new Date().getDayFromDate()}</h2>
-            <h1 class=""><img class="img" src="../img/thermo-light.png" alt="Temperature:"/>${current.main.temp} °C</h1> 
+            <h1 class=""><img class="img" src="../img/thermo-light.png" alt="Temperature:"/>${current.main.temp.toFixed(0)} °C</h1> 
         </div>
         <div>
             <h2 class=""><i class="owf owf-${current.weather[0].id}"></i> ${current.weather[0].main}</h2>
             <h2 class=""><img class="img" src="../img/humidity-light.png" alt="Humidity:"/> ${current.main.humidity}%</h2>
-            <h2 class=""><img class="img" src="../img/wind-lines-light.png" alt="Wind:"/> ${current.wind.speed} m/s | ${current.wind.deg} degrees</h2>				   
+            <h2 class=""><img class="img" src="../img/wind-lines-light.png" alt="Wind:"/> ${current.wind.speed.toFixed(0)} m/s | ${current.wind.deg} degrees</h2>				   
         </div>
     </div>`;
-        weatherDiv.innerHTML = weatherInfo;
+    weatherDiv.innerHTML = weatherInfo;
 }
 
 function get5dayForecastFromAPI(lat, long) {
@@ -307,7 +310,7 @@ function forecastLiteral(forecast) {
     var total = '';
     for (var i = 0; i < forecast.list.length; i+=8) {
         var element = forecast.list[i];
-
+        
         forecastDiv.innerHTML = "";
         let forecastInfo = 
         `<div class="siteDiv">
@@ -317,7 +320,7 @@ function forecastLiteral(forecast) {
             <h4 class=""><img class="img" src="../img/humidity-light.png" alt="Humidity:"/> ${element.main.humidity} %</h4>
             <h4 class=""><img class="img" src="../img/wind-lines-light.png" alt="Wind:" /> ${element.wind.speed.toFixed(0)} m/s | ${element.wind.deg.toFixed(0)} degrees</h4> 
         </div>`;
-            total = total + forecastInfo;
+        total = total + forecastInfo;
     } 
     forecastDiv.innerHTML = total; 
 }
@@ -329,7 +332,7 @@ function popDropDownList(allMarkers, map) {
         el.textContent = allMarkers[i].title + " " + " - " + allMyMarkers[i].country;
         el.value = allMarkers[i].id;
         select.appendChild(el);   
-
+        
         var sel = $('#selectCity');
         var selected = sel.val(); // cache selected value, before reordering
         var opts_list = sel.find('option');
@@ -337,7 +340,7 @@ function popDropDownList(allMarkers, map) {
         sel.html('').append(opts_list);
         sel.val(selected);                      
     }   
-        
+    
     document.getElementById("selectCity").onchange=function() {
         var val = this.value;
         var currentMarker = null;
@@ -346,9 +349,7 @@ function popDropDownList(allMarkers, map) {
                 currentMarker = allMarkers[i];
             }
         }
-        /* console.log(currentMarker);
-        $(".gm-style-iw").find("#button").trigger('click'); */
-
+        
         new google.maps.event.trigger(currentMarker, 'click');
         map.setCenter({lat: currentMarker.position.lat(), lng: currentMarker.position.lng()});
         map.setZoom(7);
@@ -357,21 +358,23 @@ function popDropDownList(allMarkers, map) {
 }
 
 function showHidePopup() {
-   
-        $(".site").fadeIn(300, function(){
-            $(this).focus();});
-     
-    $('.backBtn').click(function() {
-     $("#capital").fadeOut(300);
+    
+    $(".site").fadeIn(300, function(){
+        $(this).focus();
     });
-
+        
+    $('.backBtn').click(function() {
+        $("#capital").fadeOut(300);
+    });
+        
     $(document).mouseup(function(e) {
         var container = $(".window");
         var site = $('.site');
-
-        if (!container.is(e.target) && container.has(e.target).length === 0 && !site.is(e.target) && site.has(e.target).length === 0 ) {  // if the target of the click isn't the container nor a descendant of the container
-            $('.site').fadeOut(300);
-        }
+        
+        // if the target of the click isn't the container nor a descendant of the container
+        if (!container.is(e.target) && container.has(e.target).length === 0 && !site.is(e.target) && site.has(e.target).length === 0 ) {  
+        $('.site').fadeOut(300);
+        };
     });
 }
-google.maps.event.addDomListener(window, 'load', initMap);
+google.maps.event.addDomListener(window, 'load', initMap);      
