@@ -248,7 +248,7 @@ function createInfoWindow(capital, marker, map, weatherInfo) {
 }
 
 function getCurrentWeatherFromAPI(lat, long, infowindow) {
-    let weather = `sweden.json`; //`sweden.json` https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=metric&APPID=006595c752436e02740e9d8ff6b6cd05 | eb3bc19f92d9df047f452e1230df445c
+    let weather = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=metric&APPID=006595c752436e02740e9d8ff6b6cd05`; //`sweden.json` https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=metric&APPID=006595c752436e02740e9d8ff6b6cd05 | eb3bc19f92d9df047f452e1230df445c
     fetch(weather) 
     .then((response) => {
         return response.json();
@@ -293,7 +293,7 @@ function weatherLiteralForSite(current) {
 }
 
 function get5dayForecastFromAPI(lat, long) {
-    let forecast = `forecast-sthlm.json`; //`forecast-sthlm.json` `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${long}&units=metric&APPID=006595c752436e02740e9d8ff6b6cd05` | eb3bc19f92d9df047f452e1230df445c
+    let forecast = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${long}&units=metric&APPID=006595c752436e02740e9d8ff6b6cd05`; //`forecast-sthlm.json` `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${long}&units=metric&APPID=006595c752436e02740e9d8ff6b6cd05` | eb3bc19f92d9df047f452e1230df445c
     fetch(forecast) 
     .then((response) => {
         return response.json();
