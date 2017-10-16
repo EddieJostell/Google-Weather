@@ -267,7 +267,7 @@ function createWeatherLiteral(info, infowindow, map) {
     `<div class="window">
         <a href="#" class="divBtn" id="button" onclick="showHidePopup();"> <h4 class="para">${info.name} <- more!</h4></a>
         <h4 class="title">Temperature: ${info.main.temp.toFixed(0)} °C</h4>
-        <h4 class="para">Wind: ${info.wind.speed.toFixed(0)} m/s | ${info.wind.deg} degrees</h4>				
+        <h4 class="para">Wind: ${info.wind.speed.toFixed(0)} m/s | ${info.wind.deg.toFixed(0)} degrees</h4>				
         <h4 class="para">Humidity ${info.main.humidity}%</h4>
         <h4 class="para">${info.weather[0].main} <i class="owf owf-${info.weather[0].id}"></i></h4>
     </div>`;
@@ -286,7 +286,7 @@ function weatherLiteralForSite(current) {
         <div>
             <h2 class=""><i class="owf owf-${current.weather[0].id}"></i> ${current.weather[0].main}</h2>
             <h2 class=""><img class="img" src="../img/humidity-light.png" alt="Humidity:"/> ${current.main.humidity}%</h2>
-            <h2 class=""><img class="img" src="../img/wind-lines-light.png" alt="Wind:"/> ${current.wind.speed.toFixed(0)} m/s | ${current.wind.deg} degrees</h2>				   
+            <h2 class=""><img class="img" src="../img/wind-lines-light.png" alt="Wind:"/> ${current.wind.speed.toFixed(0)} m/s | ${current.wind.deg.toFixed(0)} degrees</h2>				   
         </div>
     </div>`;
     weatherDiv.innerHTML = weatherInfo;
