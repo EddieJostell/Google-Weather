@@ -267,7 +267,7 @@ function createWeatherLiteral(info, infowindow, map) {
     `<div class="window">
         <a href="#" class="divBtn" id="button" onclick="showHidePopup();"> <h4 class="para">${info.name} <- more!</h4></a>
         <h4 class="title">Temperature: ${info.main.temp.toFixed(0)} °C</h4>
-        <h4 class="para">Wind: ${info.wind.speed} m/s | ${info.wind.deg} degrees</h4>				
+        <h4 class="para">Wind: ${info.wind.speed.toFixed(0)} m/s | ${info.wind.deg} degrees</h4>				
         <h4 class="para">Humidity ${info.main.humidity}%</h4>
         <h4 class="para">${info.weather[0].main} <i class="owf owf-${info.weather[0].id}"></i></h4>
     </div>`;
