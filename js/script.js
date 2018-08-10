@@ -308,7 +308,7 @@ function get5dayForecastFromAPI(lat, long) {
 
 function forecastLiteral(forecast) {
     var total = '';
-    for (var i = 0; i < forecast.list.length; i+=8) {
+    for (var i = 1; i < forecast.list.length; i+=8) {
         var element = forecast.list[i];
         
         forecastDiv.innerHTML = "";
